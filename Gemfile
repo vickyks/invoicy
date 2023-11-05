@@ -72,3 +72,5 @@ gem 'rubocop', group: [:development, :test]
 gem 'rubocop-rspec', group: [:development, :test]
 gem 'factory_bot_rails', group: [:development, :test]
 gem 'dotenv-rails', groups: [:development, :test]
+
+gem "matrix", "~> 0.4.2"
