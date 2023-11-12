@@ -23,6 +23,8 @@ module Invoicy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    config.autoload_paths += %W(#{config.root}/app/lib)
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -33,5 +35,6 @@ module Invoicy
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.action_view.form_with_generates_remote_forms = true
   end
 end

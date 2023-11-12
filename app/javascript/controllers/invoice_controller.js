@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
 
-
 export default class extends Controller {
   static targets = ['container', 'form'];
 
@@ -37,11 +36,9 @@ export default class extends Controller {
   }
 
   handleFormSubmit(event) {
-    event.preventDefault();  // Prevent the default form submission behavior
+    event.preventDefault();
 
-    // Access form data
     const formData = new FormData(this.formTarget);
-    formData.append("authenticity_token", Rails.csrfToken());
 
     fetch('/invoices', {
       method: 'POST',
@@ -49,9 +46,7 @@ export default class extends Controller {
     })
     .then(response => {
       if (response.ok) {
-        // Flash the response.url at the top of the page
         return response.url;
-        // return response.text(); // Assuming your server responds with Turbo Stream
       } else {
         throw new Error('Failed to generate invoice'); // Handle errors as needed
       }
