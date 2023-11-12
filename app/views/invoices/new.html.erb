@@ -1,2 +1,42 @@
-<h1>Invoices#new</h1>
-<p>Find me in app/views/invoices/new.html.erb</p>
+<div class="container mx-auto p-8">
+  <form
+    data-controller="invoice"
+    data-action="submit->invoice#handleFormSubmit"
+    data-turbo-frame="invoice-form"
+    class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl mx-auto"
+  >
+
+    <!-- Business Information -->
+    <div class="mb-6">
+      <h2 class="text-2xl mb-4">Your Business Information</h2>
+      <%= render partial: 'invoices/organisation_information' %>
+    </div>
+
+    <!-- Invoice Recipient Information -->
+    <div class="mb-6">
+      <h2 class="text-2xl mb-4">Invoice Recipient Information</h2>
+      <%= render partial: 'invoices/recipient_information' %>
+    </div>
+
+    <!-- Items Section -->
+    <div class="mb-6">
+    <div class="mb-6" data-target="invoice.container">
+      <h2 class="text-2xl mb-4">Items</h2>
+
+
+      <%= form.fields_for :items do |item_form| %>
+        <%= render partial: 'invoices/item_form', locals: { form: item_form, item_number: item_form.index + 1 } %>
+      <% end %>
+
+
+      <button type="button" data-action="click->invoice#addItem" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">
+        Add Item
+      </button>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-full">
+      Generate Invoice
+    </button>
+  </form>
+</div>

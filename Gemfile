@@ -74,3 +74,5 @@ gem 'factory_bot_rails', group: [:development, :test]
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem "matrix", "~> 0.4.2"
+
+gem "tailwindcss-rails", "~> 2.0"
