@@ -2,7 +2,6 @@ class InvoicesController < ApplicationController
   def new; end
 
   def create
-    @invoice = Invoice.new()
     render json: { url: generate_invoice_url }
   end
 
@@ -31,4 +30,5 @@ class InvoicesController < ApplicationController
     params.require(:items).map do |item|
       item.permit(:name, :description, :price, :quantity)
     end
+  end
 end

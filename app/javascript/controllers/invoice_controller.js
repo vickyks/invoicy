@@ -1,39 +1,73 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
-// Connects to data-controller="invoice"
+
 export default class extends Controller {
-  // static targets = ['form']
-  static targets = ['form', 'container'];
+  static targets = ['container', 'form'];
 
-  connect() {
-    this.formTarget.addEventListener('submit', this.handleFormSubmit.bind(this));
+  addItem() {
+    const index = this.containerTarget.children.length + 1;
+    const template = this.template(index);
+    this.containerTarget.insertAdjacentHTML("beforeend", template);
+  }
+
+  template(index) {
+    return `<div data-invoice-target="item" class="border border-gray-300 rounded p-4 mb-4">
+      <legend class="text-lg font-semibold mb-2">Item ${index}</legend>
+        <div class="mb-4">
+          <label for="item_name_${index}" class="block text-gray-700 text-sm font-bold mb-2">Item</label>
+          <input type="text" id="item_name_${index}" name="items[][name]" placeholder="Enter item name"
+                 class="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+          <label for="item_description_${index}" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+          <input type="text" id="item_description_${index}" name="items[][description]" placeholder="Enter item name"
+                 class="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+          <label for="item_unit_price_${index}" class="block text-gray-700 text-sm font-bold mb-2">Unit Price</label>
+          <input type="text" id="item_unit_price_${index}" name="items[][unit_price]" placeholder="Enter item name"
+                 class="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+          <label for="item_quantity_${index}" class="block text-gray-700 text-sm font-bold mb-2">Quantity</label>
+          <input type="text" id="item_quantity_${index}" name="items[][quantity]" placeholder="Enter item name"
+                 class="appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+    </div>`;
   }
 
   handleFormSubmit(event) {
-    event.preventDefault();
+    event.preventDefault();  // Prevent the default form submission behavior
 
     // Access form data
     const formData = new FormData(this.formTarget);
+    formData.append("authenticity_token", Rails.csrfToken());
 
-    fetch('/api/invoices', {
+    fetch('/invoices', {
       method: 'POST',
       body: formData,
-    }).then(response => {
-      const pdfUrl = response.url;
-
+    })
+    .then(response => {
+      if (response.ok) {
+        // Flash the response.url at the top of the page
+        return response.url;
+        // return response.text(); // Assuming your server responds with Turbo Stream
+      } else {
+        throw new Error('Failed to generate invoice'); // Handle errors as needed
+      }
+    })
+    .then(turboStream => {
       // Use Turbo Streams to update the page
-      this.stimulate('Invoices#create', pdfUrl);
+      const frame = Turbo.stream.replace(
+        turboStream,
+        { target: this.formTarget, permanent: true }
+      );
+      Turbo.renderStreamMessage(frame);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors
+      alert('Failed to generate invoice');
     });
-  }
-
-  addItem() {
-    const newItemNumber = this.containerTarget.children.length + 1;
-
-    // Clone the first item form and update its attributes
-    const newItemForm = this.containerTarget.firstElementChild.cloneNode(true);
-    newItemForm.innerHTML = newItemForm.innerHTML.replace(/_1/g, `_${newItemNumber}`);
-
-    // Append the new item form to the container
-    this.containerTarget.appendChild(newItemForm);
   }
 }
