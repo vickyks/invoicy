@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvoicesController < ApplicationController
   def new
     @form_token = form_authenticity_token
@@ -21,11 +23,11 @@ class InvoicesController < ApplicationController
       :org_email,
       :recipient_name,
       :recipient_address,
-      items: [
-        :name,
-        :description,
-        :unit_price,
-        :quantity
+      items: %i[
+        name
+        description
+        unit_price
+        quantity
       ]
     )
   end

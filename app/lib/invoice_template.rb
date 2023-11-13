@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvoiceTemplate
   def initialize(invoice_data)
     @invoice_data = invoice_data
@@ -18,7 +20,6 @@ class InvoiceTemplate
   end
 
   private
-
 
   def total
     subtotals.sum
