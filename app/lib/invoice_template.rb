@@ -1,24 +1,24 @@
 class InvoiceTemplate
-  include 
-
   def initialize(invoice_data)
     @invoice_data = invoice_data
   end
 
-  def generate_pdf
-    PrawnHtml.append_html(pdf, invoice_template)
-    pdf.render_file(path)
+  def pdf
+    prawndoc = Prawn::Document.new(page_size: 'A4')
+    PrawnHtml.append_html(prawndoc, html_template)
+    prawndoc.render_file(path)
   end
 
   def path
-    Rails.root.join('tmp', 'invoices', "invoice_#{Time.now.to_i}.pdf")
+    Rails.root.join('tmp', 'invoices', filename)
+  end
+
+  def filename
+    "invoice_#{Time.now.to_i}.pdf"
   end
 
   private
 
-  def pdf
-    @pdf ||= Prawn::Document.new(page_size: 'A4')
-  end
 
   def total
     subtotals.sum
@@ -30,7 +30,8 @@ class InvoiceTemplate
     end
   end
 
-  def invoice_template
-    Rails.root.join('app', 'views', 'pdfs', 'invoice.html')
+  def html_template
+    html = File.read(Rails.root.join('app', 'views', 'pdfs', 'invoice.html.erb'))
+    ERB.new(html)
   end
 end

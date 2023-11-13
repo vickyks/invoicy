@@ -4,14 +4,14 @@ class InvoicesController < ApplicationController
   end
 
   def create
-    render json: { url: generate_invoice_url }
+    # XXX: shoudl I just  do a respond to and change my request instead...?
+    send_data invoice.pdf, filename: invoice.filename, type: 'application/pdf', disposition: 'inline'
   end
 
   private
 
-  def generate_invoice_url
-    # create a pdf file from params
-    InvoiceTemplate.new(invoice_params)
+  def invoice
+    InvoiceTemplate.new(invoice_data)
   end
 
   def invoice_params

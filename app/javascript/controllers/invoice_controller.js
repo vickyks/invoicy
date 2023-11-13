@@ -46,6 +46,7 @@ export default class extends Controller {
     })
     .then(response => {
       if (response.ok) {
+        // TODO: Make this a file download
         return response.url;
       } else {
         throw new Error('Failed to generate invoice'); // Handle errors as needed
