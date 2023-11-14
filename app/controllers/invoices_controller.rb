@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class InvoicesController < ApplicationController
+  before_action :generate_pdf
+
   def new
     @form_token = form_authenticity_token
   end
 
   def create
-    invoice.pdf
-
     send_file(
       invoice.path,
       type: 'application/pdf', # Set the appropriate content type
@@ -17,6 +17,10 @@ class InvoicesController < ApplicationController
   end
 
   private
+
+  def generate_pdf
+    invoice.pdf
+  end
 
   def invoice
     InvoiceTemplate.new(invoice_params)

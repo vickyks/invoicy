@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ['container', 'form', 'popover'];
+  static targets = ['container', 'form'];
 
   addItem() {
     const index = this.containerTarget.children.length + 1;
@@ -62,13 +62,5 @@ export default class extends Controller {
       console.error('Error:', error);
       alert('Failed to generate invoice');
     });
-  }
-
-  showPopover() {
-    this.popoverTarget.style.display = 'block';
-  }
-
-  hidePopover() {
-    this.popoverTarget.style.display = 'none';
   }
 }
