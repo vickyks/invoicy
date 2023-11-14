@@ -6,8 +6,14 @@ class InvoicesController < ApplicationController
   end
 
   def create
-    # XXX: shoudl I just  do a respond to and change my request instead...?
-    send_data invoice.pdf, filename: invoice.filename, type: 'application/pdf', disposition: 'inline'
+    invoice.pdf
+
+    send_file(
+      invoice.path,
+      type: 'application/pdf', # Set the appropriate content type
+      filename: invoice.filename, # Set the desired file name
+      disposition: 'attachment' # Make the browser download the file
+    )
   end
 
   private

@@ -2,13 +2,13 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-document.addEventListener("DOMContentLoaded", function() {
-  const popoverBox = document.getElementById("popoverBox");
-
-  // Close popoverBox on click outside
-  document.addEventListener("click", function(event) {
-    if (!popoverBox.contains(event.target)) {
-      popoverBox.style.display = "none";
-    }
-  });
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//   const popoverBox = document.getElementById("popoverBox");
+// 
+//   // Close popoverBox on click outside
+//   document.addEventListener("click", function(event) {
+//     if (!popoverBox.contains(event.target)) {
+//       popoverBox.style.display = "none";
+//     }
+//   });
+// });

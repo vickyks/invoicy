@@ -53,14 +53,10 @@ export default class extends Controller {
       }
     })
     .then(blob => {
-      const fileUrl = URL.createObjectURL(blob);
-
-      this.popoverTarget.children[0].innerHTML = `<p class="text-teal-500">Success! Your invoice is ready for download.</p><a href="${fileUrl}" download class="block mt-4 text-teal-500 hover:underline">Download Invoice</a>`;
-
-      this.showPopover();
-
-      this.popoverTarget.querySelector("a").addEventListener("click", () => this.hidePopover());
-      setTimeout(() => URL.revokeObjectURL(fileUrl), 1000);
+      const link=document.createElement('a');
+      link.href=window.URL.createObjectURL(blob);
+      link.download="invoice.pdf";
+      link.click();
     })
     .catch(error => {
       console.error('Error:', error);
