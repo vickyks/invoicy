@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ['container', 'form'];
+  static targets = ['container', 'form', 'popover'];
 
   addItem() {
     const index = this.containerTarget.children.length + 1;
@@ -44,26 +44,35 @@ export default class extends Controller {
       method: 'POST',
       body: formData,
     })
+
     .then(response => {
       if (response.ok) {
-        // TODO: Make this a file download
-        return response.url;
+        return response.blob(); // Get the response as a Blob
       } else {
-        throw new Error('Failed to generate invoice'); // Handle errors as needed
+        throw new Error('Failed to generate invoice');
       }
     })
-    .then(turboStream => {
-      // Use Turbo Streams to update the page
-      const frame = Turbo.stream.replace(
-        turboStream,
-        { target: this.formTarget, permanent: true }
-      );
-      Turbo.renderStreamMessage(frame);
+    .then(blob => {
+      const fileUrl = URL.createObjectURL(blob);
+
+      this.popoverTarget.children[0].innerHTML = `<p class="text-teal-500">Success! Your invoice is ready for download.</p><a href="${fileUrl}" download class="block mt-4 text-teal-500 hover:underline">Download Invoice</a>`;
+
+      this.showPopover();
+
+      this.popoverTarget.querySelector("a").addEventListener("click", () => this.hidePopover());
+      setTimeout(() => URL.revokeObjectURL(fileUrl), 1000);
     })
     .catch(error => {
       console.error('Error:', error);
-      // Handle errors
       alert('Failed to generate invoice');
     });
+  }
+
+  showPopover() {
+    this.popoverTarget.style.display = 'block';
+  }
+
+  hidePopover() {
+    this.popoverTarget.style.display = 'none';
   }
 }

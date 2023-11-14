@@ -38,5 +38,8 @@ module Invoicy
     # Don't generate system test files.
     config.generators.system_tests = nil
     config.action_view.form_with_generates_remote_forms = true
+
+    # Add the node_modules directory to the asset pipeline
+    config.assets.paths << Rails.root.join('node_modules')
   end
 end
