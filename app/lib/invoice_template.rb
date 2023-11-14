@@ -31,8 +31,13 @@ class InvoiceTemplate
     end
   end
 
+  def template_path
+    Rails.root.join('app', 'views', 'pdfs', 'invoice.html.erb')
+  end
+
   def html_template
-    html = File.read(Rails.root.join('app', 'views', 'pdfs', 'invoice.html.erb'))
-    ERB.new(html)
+    html = File.read(template_path)
+    erb_binding = binding
+    ERB.new(html).result(erb_binding)
   end
 end

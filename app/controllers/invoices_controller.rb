@@ -13,7 +13,7 @@ class InvoicesController < ApplicationController
   private
 
   def invoice
-    InvoiceTemplate.new(invoice_data)
+    InvoiceTemplate.new(invoice_params)
   end
 
   def invoice_params

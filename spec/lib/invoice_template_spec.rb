@@ -28,7 +28,7 @@ RSpec.describe InvoiceTemplate do
   let(:temp_dir) { Dir.mktmpdir }
   let(:template_path) { Rails.root.join('spec', 'fixtures', 'invoice_template.html.erb') }
 
-  subject { described_class.new(invoice_data, template_path) }
+  subject { described_class.new(invoice_data) }
 
   after do
     FileUtils.remove_entry(temp_dir)

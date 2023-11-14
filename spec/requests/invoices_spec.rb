@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Invoices', type: :request do
-  describe 'GET /invoices' do
+  describe 'GET /' do
     it 'returns http success' do
-      get '/invoices/'
+      get '/'
       expect(response).to have_http_status(:success)
     end
   end
@@ -14,7 +14,10 @@ RSpec.describe 'Invoices', type: :request do
     let(:invoice_pdf) { File.read(Rails.root.join('spec/fixtures/invoice.pdf')) }
 
     before do
-      allow(InvoiceTemplate).to_receive(:generate_pdf).and_return(invoice_pdf)
+      invoice_template_instance = instance_double(InvoiceTemplate)
+      allow(InvoiceTemplate).to receive(:new).and_return(invoice_template_instance)
+      allow(invoice_template_instance).to receive(:pdf).and_return(invoice_pdf)
+      allow(invoice_template_instance).to receive(:filename).and_return('invoice_1234567.pdf')
     end
 
     context 'with invoice params' do
@@ -43,12 +46,12 @@ RSpec.describe 'Invoices', type: :request do
       end
 
       it 'returns http success' do
-        post '/invoices/'
+        post '/invoices/', params: params
         expect(response).to have_http_status(:success)
       end
 
       it 'returns a pdf' do
-        post '/invoices/', params
+        post '/invoices/', params: params
 
         expect(response.body).to eq(invoice_pdf)
       end
