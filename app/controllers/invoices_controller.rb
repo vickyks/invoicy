@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvoicesController < ApplicationController
-  before_action :generate_pdf
+  before_action :generate_pdf, only: %i(create)
 
   def new
     @form_token = form_authenticity_token
